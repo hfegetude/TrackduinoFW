@@ -25,6 +25,7 @@
 #include "MPU6050.h"
 #include "RTC.h"
 #include "ov7670.h"
+#include "ov7670fifo.h"
 #include <stdio.h>
 #include <stdlib.h>
 #if (ARDUINO + 1) >= 100
@@ -58,6 +59,9 @@ void aprs_send()
   setupOV7670();
   captureImgOV7670(160*2,120);
 
+  setupOV7670fifo();
+  transmit_photo(640, 480);
+  capture_frame();
 
   ax25_send_header(addresses, sizeof(addresses)/sizeof(s_address));
   ax25_send_byte('/');
