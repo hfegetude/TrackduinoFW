@@ -295,7 +295,7 @@ void camInit(void){
 }
 
 
-static void captureImgOV7670(uint16_t wg,uint16_t hg){
+void captureImgOV7670(uint16_t wg,uint16_t hg){
   uint16_t lg2;
   uint8_t buf[320];
   File dataFile = SD.open("datalog.txt", FILE_WRITE);

@@ -56,13 +56,14 @@ void aprs_send()
     {DIGI_PATH2, DIGI_PATH2_TTL}, // Digi2 (second digi in the chain)
 #endif
   };
+  /*
   setupOV7670();
   captureImgOV7670(160*2,120);
 
   setupOV7670fifo();
   transmit_photo(640, 480);
   capture_frame();
-
+*/
   ax25_send_header(addresses, sizeof(addresses)/sizeof(s_address));
   ax25_send_byte('/');
   snprintf(temp, 7 ,"%02d%02d%02dz" ,current_time.dayOfMonth, current_time.month, current_time.year );
@@ -81,15 +82,15 @@ void aprs_send()
   mpu6050.startGyro();
   mpu6050.getGyro(temp_3D);
   //send rotation
-  ax25_send_byte('/RoX=');                // and
+  ax25_send_string("/RoX=");                // and
   snprintf(temp, 12 , "%.2lf", temp_3D.x  );
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
 
-  ax25_send_byte('/RoY=');                // and
+  ax25_send_string("/RoY=");                // and
   snprintf(temp, 12 , "%.2lf", temp_3D.y  );
   ax25_send_byte(temp);
 
-  ax25_send_byte('/RoZ=');                // and
+  ax25_send_string("/RoZ=");                // and
   snprintf(temp, 12 , "%.2lf", temp_3D.z  );
   ax25_send_byte(temp);
 
@@ -97,45 +98,45 @@ void aprs_send()
   lsm303.startAccelerometer();
   lsm303.getAccelerometer(temp_3D);
   //send acceleration
-  ax25_send_byte('/AcX=');                // and
+  ax25_send_string("/AcX=");                // and
   snprintf(temp, 12, "%.2lf", temp_3D.x  );
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
 
-  ax25_send_byte('/AcY=');                // and
+  ax25_send_string("/AcY=");                // and
   snprintf(temp, 12, "%.2lf", temp_3D.y  );
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
 
-  ax25_send_byte('/AcZ=');                // and
+  ax25_send_string("/AcZ=");                // and
   snprintf(temp, 12, "%.2lf", temp_3D.z  );
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
 
   lsm303.startMagnetometer();
   lsm303.getMagnetometer(temp_3D);
   //send acceleration
-  ax25_send_byte('/MaX=');                // and
+  ax25_send_string("/MaX=");                // and
   snprintf(temp, 12, "%.2lf", temp_3D.x  );
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
 
-  ax25_send_byte('/MaY=');                // and
+  ax25_send_string("/MaY=");                // and
   snprintf(temp, 12, "%.2lf", temp_3D.y  );
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
 
-  ax25_send_byte('/MaZ=');                // and
+  ax25_send_string("/MaZ=");                // and
   snprintf(temp, 12, "%.2lf", temp_3D.z  );
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
 
   //send temperature
   delay(bmp180.startTemperature());
   bmp180.getTemperature(temperature);
-  ax25_send_byte('/T=');
+  ax25_send_string("/T=");
   snprintf(temp, 12, "%.2lf", temperature);
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
 
   delay( bmp180.startPressure(4) );
   bmp180.getPressure(pressure, temperature);
-  ax25_send_byte('/P=');
+  ax25_send_string("/P=");
   snprintf(temp, 12, "%.2lf", temperature);
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
   //ax25_send_string(APRS_COMMENT);     // Comment
 
   ax25_send_footer();
