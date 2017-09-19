@@ -17,7 +17,10 @@
 
 #ifndef __APRS_H__
 #define __APRS_H__
-
-void aprs_send();
+#include "BMP180.h"
+#include "LSM303.h"
+#include "MPU6050.h"
+#include "RTC.h"
+void aprs_send(BMP180 bmp180,LSM303 lsm303, MPU6050 mpu6050 );
 
 #endif

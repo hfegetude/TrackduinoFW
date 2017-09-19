@@ -24,19 +24,19 @@ char MPU6050::setRange(uint8_t fs){
   switch (fs) {
     case 0:
     data[1] = MPU6050_GYRO_FS_250;
-    _scale = (float) 131.0;
+    _scale = (double) 131.0;
     break;
     case 1:
     data[1] = MPU6050_GYRO_FS_500;
-    _scale = (float) 65.5;
+    _scale = (double) 65.5;
     break;
     case 2:
     data[1] = MPU6050_GYRO_FS_1000;
-    _scale = (float) 32.8;
+    _scale = (double) 32.8;
     break;
     case 3:
     data[1] = MPU6050_GYRO_FS_2000;
-    _scale = (float) 16.4;
+    _scale = (double) 16.4;
     break;
   }
   return(writeBytes(MPU6050_DEFAULT_ADDRESS, data, 2));

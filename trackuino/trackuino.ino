@@ -81,13 +81,16 @@ void setup()
   afsk_setup();
   gps_setup();
   Wire.begin();
-
+  pinMode(20, INPUT);
+  pinMode(21, INPUT);
   //Begin all sensors
   bmp180.begin();
   lsm303.begin();
   lsm303.setMagnetometerGain(LSM303_MAGGAIN_4_7);
   mpu6050.begin();
   mpu6050.setRange(0);
+  mpu6050.startGyro();
+
   TIME_FORMAT launch = {
     0, //seconds
     0, //minutes
@@ -135,11 +138,12 @@ void get_pos()
 }
 
 void loop()
-{
+{ 
+  
   // Time for another APRS frame
   if ((int32_t) (millis() - next_aprs) >= 0) {
     get_pos();
-    aprs_send();
+    aprs_send(bmp180,lsm303, mpu6050 );
     next_aprs += APRS_PERIOD * 1000L;
     while (afsk_flush()) {
       power_save();
@@ -157,5 +161,7 @@ void loop()
     }
   }
 
+
   power_save(); // Incoming GPS data or interrupts will wake us up
+
 }

@@ -33,16 +33,17 @@
 #else
 #  include <WProgram.h>
 #endif
-
+/*
 extern BMP180 bmp180;
 extern LSM303 lsm303 ;
 extern MPU6050 mpu6050 ;
-
+*/
 // Exported functions
-void aprs_send()
+void aprs_send(BMP180 bmp180,LSM303 lsm303, MPU6050 mpu6050   )
 {
   char temp[12];                   // Temperature (int/ext)
   S3DVEC temp_3D;
+  char str_temp[6];
   TIME_FORMAT current_time = getDateRTC();
   double temperature;
   double pressure;
@@ -66,10 +67,10 @@ void aprs_send()
 */
   ax25_send_header(addresses, sizeof(addresses)/sizeof(s_address));
   ax25_send_byte('/');
-  snprintf(temp, 7 ,"%02d%02d%02dz" ,current_time.dayOfMonth, current_time.month, current_time.year );
-  ax25_send_byte(temp);              // Report w/ timestamp, no APRS messaging. $ = NMEA raw data
-  snprintf(temp, 7 ,"%02d%02d%02dz" ,current_time.hour, current_time.minute, current_time.second );
-  ax25_send_byte(temp);
+  snprintf(temp, 12 ,"%02d-%02d-%02d/" ,current_time.dayOfMonth, current_time.month, current_time.year );
+  ax25_send_string(temp);              // Report w/ timestamp, no APRS messaging. $ = NMEA raw data
+  snprintf(temp, 12 ,"%02d:%02d:%02d/" ,current_time.hour, current_time.minute, current_time.second );
+  ax25_send_string(temp);
 
 
 
@@ -79,66 +80,68 @@ void aprs_send()
   ax25_send_byte('O');                // Symbol: O=balloon, -=QTH
 
 
-  mpu6050.startGyro();
   mpu6050.getGyro(temp_3D);
   //send rotation
-  ax25_send_string("/RoX=");                // and
-  snprintf(temp, 12 , "%.2lf", temp_3D.x  );
+  
+  ax25_send_string("/RoX="); // and
+  dtostrf(temp_3D.x, 4, 2, temp);
   ax25_send_string(temp);
 
   ax25_send_string("/RoY=");                // and
-  snprintf(temp, 12 , "%.2lf", temp_3D.y  );
+  dtostrf(temp_3D.y, 4, 2, temp);
   ax25_send_byte(temp);
 
   ax25_send_string("/RoZ=");                // and
-  snprintf(temp, 12 , "%.2lf", temp_3D.z  );
+  dtostrf(temp_3D.z, 4, 2, temp);
   ax25_send_byte(temp);
+
 
 
   lsm303.startAccelerometer();
   lsm303.getAccelerometer(temp_3D);
   //send acceleration
   ax25_send_string("/AcX=");                // and
-  snprintf(temp, 12, "%.2lf", temp_3D.x  );
+  dtostrf(temp_3D.x, 4, 2, temp);
   ax25_send_string(temp);
 
   ax25_send_string("/AcY=");                // and
-  snprintf(temp, 12, "%.2lf", temp_3D.y  );
+  dtostrf(temp_3D.y, 4, 2, temp);
   ax25_send_string(temp);
 
   ax25_send_string("/AcZ=");                // and
-  snprintf(temp, 12, "%.2lf", temp_3D.z  );
+  dtostrf(temp_3D.z, 4, 2, temp);
   ax25_send_string(temp);
 
   lsm303.startMagnetometer();
   lsm303.getMagnetometer(temp_3D);
   //send acceleration
   ax25_send_string("/MaX=");                // and
-  snprintf(temp, 12, "%.2lf", temp_3D.x  );
+  dtostrf(temp_3D.x, 4, 2, temp);
   ax25_send_string(temp);
 
   ax25_send_string("/MaY=");                // and
-  snprintf(temp, 12, "%.2lf", temp_3D.y  );
+  dtostrf(temp_3D.y, 4, 2, temp);
   ax25_send_string(temp);
 
   ax25_send_string("/MaZ=");                // and
-  snprintf(temp, 12, "%.2lf", temp_3D.z  );
+  dtostrf(temp_3D.z, 4, 2, temp);
   ax25_send_string(temp);
 
   //send temperature
   delay(bmp180.startTemperature());
   bmp180.getTemperature(temperature);
   ax25_send_string("/T=");
-  snprintf(temp, 12, "%.2lf", temperature);
+  dtostrf(temperature, 4, 2, temp);
   ax25_send_string(temp);
 
   delay( bmp180.startPressure(4) );
   bmp180.getPressure(pressure, temperature);
   ax25_send_string("/P=");
-  snprintf(temp, 12, "%.2lf", temperature);
+  dtostrf(pressure, 4, 2, temp);
   ax25_send_string(temp);
   //ax25_send_string(APRS_COMMENT);     // Comment
 
   ax25_send_footer();
   ax25_flush_frame();                 // Tell the modem to go
+  
 }
