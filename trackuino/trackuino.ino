@@ -15,6 +15,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+ /*
+  * Version 0.2
+  * 
+  * Upgrade:
+  *   Fixed I2C communication and aprs frame creation
+  *   Fixed compilation warnings
+  * 
+  */
+
 // Mpide 22 fails to compile Arduino code because it stupidly defines ARDUINO
 // as an empty macro (hence the +0 hack). UNO32 builds are fine. Just use the
 // real Arduino IDE for Arduino builds. Optionally complain to the Mpide
