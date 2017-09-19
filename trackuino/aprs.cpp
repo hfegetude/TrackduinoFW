@@ -45,8 +45,8 @@ void aprs_send(BMP180 bmp180,LSM303 lsm303, MPU6050 mpu6050   )
   S3DVEC temp_3D;
   char str_temp[6];
   TIME_FORMAT current_time = getDateRTC();
-  double temperature;
-  double pressure;
+  double temperature=0;
+  double pressure=0;
   const struct s_address addresses[] = {
     {D_CALLSIGN, D_CALLSIGN_ID},  // Destination callsign
     {S_CALLSIGN, S_CALLSIGN_ID},  // Source callsign (-11 = balloon, -9 = car)
@@ -89,11 +89,11 @@ void aprs_send(BMP180 bmp180,LSM303 lsm303, MPU6050 mpu6050   )
 
   ax25_send_string("/RoY=");                // and
   dtostrf(temp_3D.y, 4, 2, temp);
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
 
   ax25_send_string("/RoZ=");                // and
   dtostrf(temp_3D.z, 4, 2, temp);
-  ax25_send_byte(temp);
+  ax25_send_string(temp);
 
 
 

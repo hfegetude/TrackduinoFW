@@ -103,7 +103,7 @@ void setup()
   setDateRTC(launch);
   // Do not start until we get a valid time reference
   // for slotted transmissions.
-  if (APRS_SLOT >= 0 & 0) {
+  if ( (APRS_SLOT >= 0) & 0) {
     do {
       while (! Serial3.available())
         power_save();
